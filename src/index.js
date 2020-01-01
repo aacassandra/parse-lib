@@ -7,8 +7,8 @@ import Roles from './functions/roles';
 
 const ParseConfig = Config;
 
-const ParseRetrive = Objects.retrieve;
-const ParseRetrives = Objects.retrieves;
+const ParseRetrieve = Objects.retrieve;
+const ParseRetrieves = Objects.retrieves;
 const ParseSave = Objects.save;
 const ParseUpdate = Objects.update;
 const ParseDelete = Objects.delete;
@@ -37,8 +37,8 @@ const ParseDeleteRole = Roles.deleteRole;
 
 export {
   ParseConfig,
-  ParseRetrive,
-  ParseRetrives,
+  ParseRetrieve,
+  ParseRetrieves,
   ParseSave,
   ParseUpdate,
   ParseDelete,
