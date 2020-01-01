@@ -1,0 +1,29 @@
+{
+  "parser": "babel-eslint",
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "plugins": ["import", "eslint-plugin-prettier"],
+  "rules": {
+    "no-console": "off",
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }],
+    "import/prefer-default-export": "off",
+    "quotes": ["error", "single", { "avoidEscape": true, "allowTemplateLiterals": false }],
+    "camelcase": "off",
+    "no-use-before-define": "off",
+    "semi": ["error", "always"],
+    "prettier/prettier": [
+      "error",
+      {
+        "trailingComma": "none",
+        "singleQuote": true,
+        "jsxSingleQuote": false,
+        "printWidth": 100,
+        "semi": true,
+        "jsxBracketSameLine": true
+      }
+    ]
+  },
+  "env": {
+    "jest": true,
+    "es6": true
+  }
+}

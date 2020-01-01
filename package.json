@@ -1,0 +1,41 @@
+{
+  "name": "@aacassandra/parse-lib",
+  "version": "1.0.0",
+  "description": "Parse libraries",
+  "main": "src/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aacassandra/parse-lib.git"
+  },
+  "keywords": [
+    "npm"
+  ],
+  "author": {
+    "name": "Alauddin Afif Cassandra",
+    "email": "alauddinafifcassandra@programmer.net",
+    "url": "aacassandra.github.io"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/aacassandra/parse-lib/issues"
+  },
+  "homepage": "https://github.com/aacassandra/parse-lib#readme",
+  "dependencies": {
+    "@aacassandra/parse-config": "^1.0.0",
+    "jquery": "^3.3.1",
+    "xmlhttprequest": "^1.8.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.7.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-prettier": "^3.1.1",
+    "prettier": "^1.19.1"
+  }
+}
