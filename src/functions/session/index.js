@@ -11,41 +11,41 @@ const Index = {
       let response = ParseDependency([objectId, options]);
       if (!response.status) {
         res(response);
-      }
-
-      let url = Initialize();
-      url = `${url}/sessions/${objectId}`;
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('DELETE', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
       } else {
-        xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
-      }
+        let url = Initialize();
+        url = `${url}/sessions/${objectId}`;
+        url = encodeURI(url);
 
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        } else {
+          xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
         }
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output,
-          status: true
-        });
-      };
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output,
+            status: true
+          });
+        };
 
-      xhr.send(null);
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(null);
+      }
     });
   },
   updateSession(objectId = '', data = [], options = { sessionToken: '', masterKey: false }) {
@@ -55,46 +55,46 @@ const Index = {
       let response = ParseDependency([objectId, data]);
       if (!response.status) {
         res(response);
-      }
-
-      let url = Initialize();
-      url = `${url}/sessions/${objectId}`;
-
-      let json = await ParseObjectSet(data, options.masterKey);
-      json = JSON.stringify(json);
-
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('PUT', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
       } else {
-        xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
-      }
-      xhr.setRequestHeader('Content-Type', 'application/json');
+        let url = Initialize();
+        url = `${url}/sessions/${objectId}`;
 
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        let json = await ParseObjectSet(data, options.masterKey);
+        json = JSON.stringify(json);
+
+        url = encodeURI(url);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        } else {
+          xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
         }
+        xhr.setRequestHeader('Content-Type', 'application/json');
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output,
-          status: true
-        });
-      };
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output,
+            status: true
+          });
+        };
 
-      xhr.send(json);
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(json);
+      }
     });
   },
   retrieveSession(objectId = '', options = { sessionToken: '', masterKey: false }) {
@@ -103,41 +103,41 @@ const Index = {
       let response = ParseDependency([objectId]);
       if (!response.status) {
         res(response);
-      }
-
-      let url = Initialize();
-      url = `${url}/sessions/${objectId}`;
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
       } else {
-        xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
-      }
+        let url = Initialize();
+        url = `${url}/sessions/${objectId}`;
+        url = encodeURI(url);
 
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        } else {
+          xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
         }
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output,
-          status: true
-        });
-      };
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output,
+            status: true
+          });
+        };
 
-      xhr.send(null);
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(null);
+      }
     });
   },
   retrievesSession(options = { sessionToken: '', masterKey: false }) {
@@ -146,41 +146,41 @@ const Index = {
       let response = ParseDependency([options]);
       if (!response.status) {
         res(response);
-      }
-
-      let url = Initialize();
-      url = `${url}/sessions`;
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
       } else {
-        xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
-      }
+        let url = Initialize();
+        url = `${url}/sessions`;
+        url = encodeURI(url);
 
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        } else {
+          xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
         }
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output,
-          status: true
-        });
-      };
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output,
+            status: true
+          });
+        };
 
-      xhr.send(null);
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(null);
+      }
     });
   }
 };

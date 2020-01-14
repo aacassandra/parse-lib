@@ -1,3 +1,4 @@
+import { ParseLQ } from '@aacassandra/parse-live-query';
 import Config from './functions/config';
 import Objects from './functions/objects';
 import Session from './functions/session';
@@ -35,6 +36,8 @@ const ParseRetrieveRole = Roles.retrieveRole;
 const ParseUpdateRole = Roles.updateRole;
 const ParseDeleteRole = Roles.deleteRole;
 
+const ParseWebSocket = ParseLQ;
+
 export {
   ParseConfig,
   ParseRetrieve,
@@ -60,5 +63,6 @@ export {
   ParseCreateRole,
   ParseRetrieveRole,
   ParseUpdateRole,
-  ParseDeleteRole
+  ParseDeleteRole,
+  ParseWebSocket
 };

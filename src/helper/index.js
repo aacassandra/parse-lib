@@ -18,15 +18,25 @@ const Helper = {
           output.results.constructor.name === 'Array'
         ) {
           if (!output.results.length) {
-            response = {
-              output: {
-                code: 404,
-                message: 'No data available'
-              },
-              status: false
-            };
+            if (!output.count) {
+              response = {
+                output: {
+                  code: 404,
+                  message: 'No data available'
+                },
+                status: false
+              };
+            }
           }
         }
+      } else if (xhr.responseText === 'TypeError: Failed to fetch') {
+        response = {
+          output: {
+            code: 0,
+            message: 'Connection refused'
+          },
+          status: false
+        };
       } else {
         const output = JSON.parse(xhr.responseText);
         if (output.code && output.error) {

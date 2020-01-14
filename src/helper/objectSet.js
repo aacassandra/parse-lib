@@ -33,6 +33,17 @@ const Index = (data, masterKey = false) => {
             ...json,
             [dat[1]]: pointer
           };
+        } else if (dat[0] === 'geopoint') {
+          const geopoint = {
+            __type: 'GeoPoint',
+            latitude: dat[2] * 1,
+            longitude: dat[3] * 1
+          };
+          
+          json = {
+            ...json,
+            [dat[1]]: geopoint
+          };
         }
       } else if (dat[0] === 'string') {
         json = {

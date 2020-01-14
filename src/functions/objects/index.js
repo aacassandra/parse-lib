@@ -19,42 +19,42 @@ const Index = {
       let response = ParseDependency([data]);
       if (!response.status) {
         res(response);
-      }
+      } else {
+        let json = await ParseBatchConditional(data, options.masterKey);
+        json = JSON.stringify(json);
 
-      let json = await ParseBatchConditional(data, options.masterKey);
-      json = JSON.stringify(json);
+        let url = Initialize();
+        url = `${url}/batch`;
+        url = encodeURI(url);
 
-      let url = Initialize();
-      url = `${url}/batch`;
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
-
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
         }
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output,
-          status: true
-        });
-      };
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output,
+            status: true
+          });
+        };
 
-      xhr.send(json);
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(json);
+      }
     });
   },
   delete(className = '', objectId = '', options = { masterKey: false }) {
@@ -64,39 +64,39 @@ const Index = {
       let response = ParseDependency([className, objectId]);
       if (!response.status) {
         res(response);
-      }
+      } else {
+        let url = Initialize();
+        url = `${url}/classes/${className}/${objectId}`;
 
-      let url = Initialize();
-      url = `${url}/classes/${className}/${objectId}`;
+        url = encodeURI(url);
 
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('DELETE', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
-
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
         }
 
-        res({
-          output: 'Object has been removed',
-          status: true
-        });
-      };
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+          res({
+            output: 'Object has been removed',
+            status: true
+          });
+        };
 
-      xhr.send(null);
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(null);
+      }
     });
   },
   update(
@@ -111,49 +111,49 @@ const Index = {
       let response = ParseDependency([className, objectId, data]);
       if (!response.status) {
         res(response);
-      }
+      } else {
+        let url = Initialize();
+        url = `${url}/classes/${className}/${objectId}`;
 
-      let url = Initialize();
-      url = `${url}/classes/${className}/${objectId}`;
+        let json = await ParseObjectSet(data, options.masterKey);
+        json = JSON.stringify(json);
 
-      let json = await ParseObjectSet(data, options.masterKey);
-      json = JSON.stringify(json);
+        url = encodeURI(url);
 
-      url = encodeURI(url);
+        const xhr = new XMLHttpRequest();
+        xhr.open('PUT', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        }
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('PUT', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
+          const output = JSON.parse(xhr.responseText);
+          const getResponse = await Index.retrieve(className, objectId, options);
+          if (getResponse.status) {
+            res(getResponse);
+          } else {
+            res({
+              output,
+              status: true
+            });
+          }
+        };
+
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
           res(response);
-        }
+        };
 
-        const output = JSON.parse(xhr.responseText);
-        const getResponse = await Index.retrieve(className, objectId, options);
-        if (getResponse.status) {
-          res(getResponse);
-        } else {
-          res({
-            output,
-            status: true
-          });
-        }
-      };
-
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
-
-      xhr.send(json);
+        xhr.send(json);
+      }
     });
   },
   save(className = '', data = [], options = { where: [], include: [], masterKey: false }) {
@@ -163,49 +163,49 @@ const Index = {
       let response = ParseDependency([className, data]);
       if (!response.status) {
         res(response);
-      }
+      } else {
+        let url = Initialize();
+        url = `${url}/classes/${className}`;
 
-      let url = Initialize();
-      url = `${url}/classes/${className}`;
+        let json = await ParseObjectSet(data, options.masterKey);
+        json = JSON.stringify(json);
 
-      let json = await ParseObjectSet(data, options.masterKey);
-      json = JSON.stringify(json);
+        url = encodeURI(url);
 
-      url = encodeURI(url);
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        }
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('POST', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
+          const output = JSON.parse(xhr.responseText);
+          const getResponse = await Index.retrieve(className, output.objectId, options);
+          if (getResponse.status) {
+            res(getResponse);
+          } else {
+            res({
+              output,
+              status: true
+            });
+          }
+        };
+
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
           res(response);
-        }
+        };
 
-        const output = JSON.parse(xhr.responseText);
-        const getResponse = await Index.retrieve(className, output.objectId, options);
-        if (getResponse.status) {
-          res(getResponse);
-        } else {
-          res({
-            output,
-            status: true
-          });
-        }
-      };
-
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
-
-      xhr.send(json);
+        xhr.send(json);
+      }
     });
   },
   retrieve(
@@ -218,83 +218,84 @@ const Index = {
       let response = ParseDependency([className]);
       if (!response.status) {
         res(response);
-      }
-      let url = Initialize();
-      url = `${url}/classes/${className}?limit=10000`;
-
-      if (options.where && options.where.length) {
-        options.where.push({
-          object: 'objectId',
-          equalTo: objectId
-        });
-        url = `${url}&where=${ParseConditional(options.where)}`;
       } else {
-        const createOptions = {
-          where: [
-            {
-              object: 'objectId',
-              equalTo: objectId
-            }
-          ]
-        };
-        url = `${url}&where=${ParseConditional(createOptions.where)}`;
-      }
+        let url = Initialize();
+        url = `${url}/classes/${className}?limit=10000`;
 
-      if (options.include && options.include.length) {
-        url = `${url}&include=${JSON.stringify(options.include)}`;
-      }
-
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
-
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        if (options.where && options.where.length) {
+          options.where.push({
+            object: 'objectId',
+            equalTo: objectId
+          });
+          url = `${url}&where=${ParseConditional(options.where)}`;
+        } else {
+          const createOptions = {
+            where: [
+              {
+                object: 'objectId',
+                equalTo: objectId
+              }
+            ]
+          };
+          url = `${url}&where=${ParseConditional(createOptions.where)}`;
         }
 
-        const output = JSON.parse(xhr.responseText);
-        if (options.relation && options.relation.length) {
-          const promises = options.relation.map(async rel => {
-            let onClassName = '';
-            Object.keys(output.results[0]).forEach(key => {
-              if (rel === key) {
-                onClassName = output.results[0][key].className;
+        if (options.include && options.include.length) {
+          url = `${url}&include=${JSON.stringify(options.include)}`;
+        }
+
+        url = encodeURI(url);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        }
+
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
+
+          const output = JSON.parse(xhr.responseText);
+          if (options.relation && options.relation.length) {
+            const promises = options.relation.map(async rel => {
+              let onClassName = '';
+              Object.keys(output.results[0]).forEach(key => {
+                if (rel === key) {
+                  onClassName = output.results[0][key].className;
+                }
+              });
+
+              const getRelation = await Queries.retrievesRelation(className, objectId, {
+                name: rel,
+                className: onClassName
+              });
+
+              if (getRelation.status) {
+                output.results[0][rel] = getRelation.output;
               }
             });
 
-            const getRelation = await Queries.retrievesRelation(className, objectId, {
-              name: rel,
-              className: onClassName
-            });
+            await Promise.all(promises);
+          }
 
-            if (getRelation.status) {
-              output.results[0][rel] = getRelation.output;
-            }
+          res({
+            output: output.results[0],
+            status: true
           });
+        };
 
-          await Promise.all(promises);
-        }
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
 
-        res({
-          output: output.results[0],
-          status: true
-        });
-      };
-
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
-
-      xhr.send(null);
+        xhr.send(null);
+      }
     });
   },
   retrieves(className = '', options = { where: [], include: [], relation: [], masterKey: false }) {
@@ -303,73 +304,74 @@ const Index = {
       let response = ParseDependency([className]);
       if (!response.status) {
         res(response);
-      }
-      let url = Initialize();
-      url = `${url}/classes/${className}?limit=10000`;
-      if (options.where && options.where.length) {
-        url = `${url}&where=${ParseConditional(options.where)}`;
-      }
-
-      if (options.include && options.include.length) {
-        url = `${url}&include=${JSON.stringify(options.include)}`;
-      }
-
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
-
-      xhr.onload = async () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+      } else {
+        let url = Initialize();
+        url = `${url}/classes/${className}?limit=10000`;
+        if (options.where && options.where.length) {
+          url = `${url}&where=${ParseConditional(options.where)}`;
         }
 
-        const output = JSON.parse(xhr.responseText);
-        if (options.relation && options.relation.length) {
-          const promises1 = output.results.map(async item => {
-            // eslint-disable-next-line prefer-const
-            let inItem = item;
-            const promises2 = options.relation.map(async rel => {
-              let onClassName = '';
-              Object.keys(inItem).forEach(key => {
-                if (rel === key) {
-                  onClassName = inItem[key].className;
+        if (options.include && options.include.length) {
+          url = `${url}&include=${JSON.stringify(options.include)}`;
+        }
+
+        url = encodeURI(url);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        }
+
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
+
+          const output = JSON.parse(xhr.responseText);
+          if (options.relation && options.relation.length) {
+            const promises1 = output.results.map(async item => {
+              // eslint-disable-next-line prefer-const
+              let inItem = item;
+              const promises2 = options.relation.map(async rel => {
+                let onClassName = '';
+                Object.keys(inItem).forEach(key => {
+                  if (rel === key) {
+                    onClassName = inItem[key].className;
+                  }
+                });
+
+                const getRelation = await Queries.retrievesRelation(className, item.objectId, {
+                  name: rel,
+                  className: onClassName
+                });
+
+                if (getRelation.status) {
+                  inItem[rel] = getRelation.output;
                 }
               });
 
-              const getRelation = await Queries.retrievesRelation(className, item.objectId, {
-                name: rel,
-                className: onClassName
-              });
-
-              if (getRelation.status) {
-                inItem[rel] = getRelation.output;
-              }
+              await Promise.all(promises2);
             });
 
-            await Promise.all(promises2);
+            await Promise.all(promises1);
+          }
+          res({
+            output: output.results,
+            status: true
           });
+        };
 
-          await Promise.all(promises1);
-        }
-        res({
-          output: output.results,
-          status: true
-        });
-      };
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
-
-      xhr.send(null);
+        xhr.send(null);
+      }
     });
   }
 };

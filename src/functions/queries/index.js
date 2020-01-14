@@ -11,42 +11,42 @@ const Index = {
       let response = ParseDependency([className]);
       if (!response.status) {
         res(response);
-      }
+      } else {
+        let url = Initialize();
+        url = `${url}/classes/${className}`;
+        if (options.include && options.include.length) {
+          url = `${url}?include=${options.include}`;
+        }
+        url = encodeURI(url);
 
-      let url = Initialize();
-      url = `${url}/classes/${className}`;
-      if (options.include && options.include.length) {
-        url = `${url}?include=${options.include}`;
-      }
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
-
-      xhr.onload = () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
         }
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output: output.results,
-          status: true
-        });
-      };
+        xhr.onload = () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output: output.results,
+            status: true
+          });
+        };
 
-      xhr.send(null);
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(null);
+      }
     });
   },
   retrievesRelation: (
@@ -60,55 +60,55 @@ const Index = {
       let response = ParseDependency([className, objectId, colomn.name, colomn.className]);
       if (!response.status) {
         res(response);
-      }
-
-      let url = Initialize();
-      url = `${url}/classes/${colomn.className}?where=`;
-      let where = {
-        $relatedTo: {
-          object: {
-            __type: 'Pointer',
-            className,
-            objectId
-          },
-          key: colomn.name
+      } else {
+        let url = Initialize();
+        url = `${url}/classes/${colomn.className}?where=`;
+        let where = {
+          $relatedTo: {
+            object: {
+              __type: 'Pointer',
+              className,
+              objectId
+            },
+            key: colomn.name
+          }
+        };
+        where = JSON.stringify(where);
+        url += where;
+        if (options.include && options.include.length) {
+          url = `${url + where}&include=${options.include}`;
         }
-      };
-      where = JSON.stringify(where);
-      url += where;
-      if (options.include && options.include.length) {
-        url = `${url + where}&include=${options.include}`;
-      }
 
-      url = encodeURI(url);
+        url = encodeURI(url);
 
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        }
 
-      xhr.onload = () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
+        xhr.onload = () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
+
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output: output.results,
+            status: true
+          });
+        };
+
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
           res(response);
-        }
+        };
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output: output.results,
-          status: true
-        });
-      };
-
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
-
-      xhr.send(null);
+        xhr.send(null);
+      }
     });
   },
   countingObjects: (className = '', options = { where: [], include: [], masterKey: false }) => {
@@ -117,48 +117,49 @@ const Index = {
       let response = ParseDependency([className]);
       if (!response.status) {
         res(response);
-      }
+      } else {
+        let url = Initialize();
+        url = `${url}/classes/${className}?count=1&limit=0`;
 
-      let url = Initialize();
-      url = `${url}/classes/${className}?count=1&limit=0`;
-
-      if (options.where && options.where.length) {
-        url = `${url}&where=${ParseConditional(options.where)}`;
-      }
-
-      if (options.include && options.include.length) {
-        url = `${url}&include=${options.include}`;
-      }
-
-      url = encodeURI(url);
-
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', url, true);
-      xhr.setRequestHeader(Config.headerAppId, Config.appId);
-      xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-      if (options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
-
-      xhr.onload = () => {
-        response = ParseHandleError(xhr);
-        if (!response.status) {
-          res(response);
+        if (options.where && options.where.length) {
+          url = `${url}&where=${ParseConditional(options.where)}`;
         }
 
-        const output = JSON.parse(xhr.responseText);
-        res({
-          output: output.count,
-          status: true
-        });
-      };
+        if (options.include && options.include.length) {
+          url = `${url}&include=${options.include}`;
+        }
 
-      xhr.onerror = () => {
-        response = ParseHandleError(xhr);
-        res(response);
-      };
+        url = encodeURI(url);
 
-      xhr.send(null);
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        }
+
+        xhr.onload = () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            res(response);
+          }
+
+          const output = JSON.parse(xhr.responseText);
+
+          res({
+            output: output.count,
+            status: true
+          });
+        };
+
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          res(response);
+        };
+
+        xhr.send(null);
+      }
     });
   }
 };
