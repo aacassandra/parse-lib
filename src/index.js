@@ -5,6 +5,8 @@ import Session from './functions/session';
 import Users from './functions/users';
 import Queries from './functions/queries';
 import Roles from './functions/roles';
+import File from './functions/files';
+import Cloud from './functions/cloud';
 
 const ParseConfig = Config;
 
@@ -14,6 +16,11 @@ const ParseSave = Objects.save;
 const ParseUpdate = Objects.update;
 const ParseDelete = Objects.delete;
 const ParseBatch = Objects.batch;
+const ParseFile = File;
+const ParseCloudUpdateUser = Cloud.ParseUpdateUser;
+const ParseCloudUpdate = Cloud.ParseUpdate;
+const ParseCloudRetrieve = Cloud.ParseRetrieve;
+const ParseCloudRetrieves = Cloud.ParseRetrieves;
 
 const ParseSignIn = Users.signIn;
 const ParseSignUp = Users.signUp;
@@ -39,6 +46,11 @@ const ParseDeleteRole = Roles.deleteRole;
 const ParseWebSocket = ParseLQ;
 
 export {
+  ParseCloudUpdateUser,
+  ParseCloudUpdate,
+  ParseCloudRetrieve,
+  ParseCloudRetrieves,
+  ParseFile,
   ParseConfig,
   ParseRetrieve,
   ParseRetrieves,

@@ -95,7 +95,11 @@ const Helper = {
         }
 
         if (Object.keys(dep).length === 0) {
-          i += 1;
+          if (!dep.name && !dep.size) {
+            i += 1;
+          } else {
+            // If file as a image
+          }
         }
       });
 

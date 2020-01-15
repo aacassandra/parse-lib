@@ -1,44 +1,47 @@
-import * as jQuery from 'jquery';
-import ObjectSet from './objectSet';
+/* eslint-disable no-async-promise-executor */
 import ParseData from '@aacassandra/parse-config';
-
-const $ = jQuery;
+import ObjectSet from './objectSet';
 
 const Index = (data, masterKey = false) => {
   const Config = ParseData.config;
-  return new Promise(resolve => {
+  return new Promise(async resolve => {
     const json = {
       requests: []
     };
 
-    const promises = [];
-    data.forEach(async item => {
+    let url;
+    if (Config.surl && Config.surl !== 'none') {
+      url = `/${Config.surl}`;
+    } else {
+      url = '';
+    }
+
+    const promises = data.map(async item => {
       const method = item.method.toUpperCase();
       if (method === 'POST') {
         const body = await ObjectSet(item.data, masterKey);
         json.requests.push({
           method,
-          path: `/${Config.surl}/classes/${item.className}`,
+          path: `${url}/classes/${item.className}`,
           body
         });
       } else if (method === 'PUT') {
         const body = await ObjectSet(item.data, masterKey);
         json.requests.push({
           method,
-          path: `/${Config.surl}/classes/${item.className}/${item.objectId}`,
+          path: `${url}/classes/${item.className}/${item.objectId}`,
           body
         });
       } else if (method === 'DELETE') {
         json.requests.push({
           method,
-          path: `/${Config.surl}/classes/${item.className}/${item.objectId}`
+          path: `${url}/classes/${item.className}/${item.objectId}`
         });
       }
     });
 
-    $.when.apply(null, promises).done(() => {
-      resolve(json);
-    });
+    await Promise.all(promises);
+    resolve(json);
   });
 };
 

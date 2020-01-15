@@ -1,5 +1,23 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
+
+// Convert a base64 string into a binary Uint8 Array
+// https://gist.github.com/borismus/1032746
+const convertDataURIToBinary = dataURI => {
+  const BASE64_MARKER = ';base64,';
+  const base64Index = dataURI.indexOf(BASE64_MARKER) + BASE64_MARKER.length;
+  const base64 = dataURI.substring(base64Index);
+  const raw = window.atob(base64);
+  const rawLength = raw.length;
+  const array = new Uint8Array(new ArrayBuffer(rawLength));
+
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < rawLength; i++) {
+    array[i] = raw.charCodeAt(i);
+  }
+  return array;
+};
+
 const init = (date = null) => {
   let _date;
   if (date == null) {
@@ -61,6 +79,54 @@ const property = (date = new Date(), utc = false, string = false) => {
 
 const tools = {
   get: {
+    file: {
+      property: f => {
+        return new Promise(resolve => {
+          let blobURL;
+          let fileName;
+          let response = {
+            status: false,
+            output: null
+          };
+          if (f) {
+            if (/(jpe?g|png|gif)$/i.test(f.type)) {
+              const r = new FileReader();
+              r.onload = e => {
+                const base64Img = e.target.result;
+                const binaryImg = convertDataURIToBinary(base64Img);
+                const blob = new Blob([binaryImg], { type: f.type });
+                blobURL = window.URL.createObjectURL(blob);
+                fileName = f.name;
+
+                const output = {
+                  nameImg: fileName,
+                  typeImg: f.type,
+                  sizeImg: f.size,
+                  base64Url: base64Img,
+                  blobUrl: blobURL,
+                  base64Img,
+                  blobImg: blobURL,
+                  binaryImg
+                };
+
+                response = {
+                  status: true,
+                  output
+                };
+                resolve(response);
+              };
+              r.readAsDataURL(f);
+            } else {
+              response.output = 'Failed file type';
+              resolve(response);
+            }
+          } else {
+            response.output = 'Failed to load file';
+            resolve(response);
+          }
+        });
+      }
+    },
     stringSplitter: (str = '', spliter = '', row = 0) => {
       return str.split(spliter)[row];
     },

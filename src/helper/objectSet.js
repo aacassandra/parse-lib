@@ -1,27 +1,12 @@
-import * as jQuery from 'jquery';
-import ParseData from '@aacassandra/parse-config';
+/* eslint-disable no-async-promise-executor */
 import Tools from '../tools';
-
-const $ = jQuery;
-
-const initialize = () => {
-  let url = '';
-  const Config = ParseData.config;
-  if (Config.protocol && Config.host && Config.port) {
-    if (Config.surl && Config.surl !== 'none') {
-      url = `${Config.protocol}://${Config.host}:${Config.port}/${Config.surl}`;
-    } else {
-      url = `${Config.protocol}://${Config.host}:${Config.port}`;
-    }
-  }
-  return url;
-};
+// eslint-disable-next-line import/no-cycle
+import ParseFile from '../functions/files';
 
 const Index = (data, masterKey = false) => {
-  return new Promise(resolve => {
+  return new Promise(async resolve => {
     let json = {};
-    const promises = [];
-    data.forEach(async dat => {
+    const promises = data.map(async dat => {
       if (dat[3]) {
         if (dat[0] === 'pointer') {
           const pointer = {
@@ -39,7 +24,7 @@ const Index = (data, masterKey = false) => {
             latitude: dat[2] * 1,
             longitude: dat[3] * 1
           };
-          
+
           json = {
             ...json,
             [dat[1]]: geopoint
@@ -95,35 +80,20 @@ const Index = (data, masterKey = false) => {
           [dat[1]]: dat[2]
         };
       } else if (dat[0] === 'image') {
-        const Config = ParseData.config;
-        const file = dat[2];
-        let serverUrl = initialize();
-        serverUrl = `${serverUrl}/files/${file.name}`;
-        const request = $.ajax({
-          type: 'POST',
-          beforeSend(req) {
-            req.setRequestHeader(Config.headerAppId, Config.appId);
-            req.setRequestHeader(Config.headerResKey, Config.resKey);
-            req.setRequestHeader(Config.headerMasterKey, masterKey ? Config.masterKey : '');
-            req.setRequestHeader('Content-Type', file.type);
-          },
-          url: serverUrl,
-          data: file,
-          processData: false,
-          contentType: false,
-          success(resx) {
-            const filer = {
-              __type: 'File',
-              url: resx.url,
-              name: resx.name
-            };
-            json = {
-              ...json,
-              [dat[1]]: filer
-            };
-          }
+        const upload = await ParseFile(dat[2], {
+          masterKey
         });
-        promises.push(request);
+        if (upload.status) {
+          const filer = {
+            __type: 'File',
+            url: upload.output.url,
+            name: upload.output.name
+          };
+          json = {
+            ...json,
+            [dat[1]]: filer
+          };
+        }
       } else if (dat[0] === 'addRelation') {
         json = {
           ...json,
@@ -179,9 +149,8 @@ const Index = (data, masterKey = false) => {
       }
     });
 
-    $.when.apply(null, promises).done(() => {
-      resolve(json);
-    });
+    await Promise.all(promises);
+    resolve(json);
   });
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "@aacassandra/parse-lib",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "Parse libraries",
   "main": "src/index.js",
   "publishConfig": {
@@ -16,7 +16,7 @@
   "author": {
     "name": "Alauddin Afif Cassandra",
     "email": "alauddinafifcassandra@programmer.net",
-    "url": "aacassandra.github.io"
+    "url": "https://aacassandra.github.io"
   },
   "license": "MIT",
   "bugs": {
@@ -26,7 +26,6 @@
   "dependencies": {
     "@aacassandra/parse-config": "^1.0.3",
     "@aacassandra/parse-live-query": "^1.0.0",
-    "jquery": "^3.3.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
