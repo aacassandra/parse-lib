@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import ParseData from '@aacassandra/parse-config';
 import Conditional from './conditional';
 import ObjectSet from './objectSet';

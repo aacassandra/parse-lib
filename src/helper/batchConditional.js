@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 /* eslint-disable no-async-promise-executor */
 import ParseData from '@aacassandra/parse-config';
 import ObjectSet from './objectSet';

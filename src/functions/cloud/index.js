@@ -2,6 +2,7 @@
 import ParseData from '@aacassandra/parse-config';
 import { ParseDependency, ParseHandleError } from '../../helper';
 import Initialize from '../initialize';
+import Tools from '../../tools';
 
 const { XMLHttpRequest } = require('xmlhttprequest');
 
@@ -60,20 +61,38 @@ const CloudCode = (data = {}) => {
 };
 
 export default {
-  ParseUpdateUser: async (
-    objectId = '',
-    data = [],
-    options = { include: [], masterKey: false }
-  ) => {
+  UpdateUser: async (objectId = '', data = [], options = { include: [], masterKey: false }) => {
+    const newData = [];
+    const promises = data.map(async dat => {
+      if (dat[0] === 'image') {
+        const file = await Tools.get.file.property(dat[2]);
+        if (file.status) {
+          const { nameImg } = file.output;
+          const { base64Img } = file.output;
+          newData.push([
+            'image',
+            dat[1],
+            {
+              fileName: nameImg,
+              base64: base64Img
+            }
+          ]);
+        }
+      } else {
+        newData.push(dat);
+      }
+    });
+
+    await Promise.all(promises);
     const cloud = await CloudCode({
       objectId,
-      data,
+      data: newData,
       options,
       functionName: 'ParseUpdateUser'
     });
     return cloud;
   },
-  ParseUpdate: async (
+  Update: async (
     className = '',
     objectId = '',
     data = [],
@@ -88,7 +107,7 @@ export default {
     });
     return cloud;
   },
-  ParseRetrieve: async (
+  Retrieve: async (
     className = '',
     objectId = '',
     options = { where: [], include: [], relation: [], masterKey: false }
@@ -101,7 +120,7 @@ export default {
     });
     return cloud;
   },
-  ParseRetrieves: async (
+  Retrieves: async (
     className = '',
     options = { where: [], include: [], relation: [], masterKey: false }
   ) => {
