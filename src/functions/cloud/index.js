@@ -127,7 +127,7 @@ export default {
     const cloud = await CloudCode({
       className,
       options,
-      functionName: 'ParseRetrieve'
+      functionName: 'ParseRetrieves'
     });
     return cloud;
   }
