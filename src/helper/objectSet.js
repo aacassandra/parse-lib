@@ -29,6 +29,38 @@ const Index = (data, masterKey = false) => {
             ...json,
             [dat[1]]: geopoint
           };
+        } else if (dat[0] === 'addRelation') {
+          json = {
+            ...json,
+            [dat[1]]: {
+              __op: 'AddRelation',
+              objects: []
+            }
+          };
+
+          dat[2].forEach(objectId => {
+            json[dat[1]].objects.push({
+              __type: 'Pointer',
+              objectId,
+              className: dat[3]
+            });
+          });
+        } else if (dat[0] === 'removeRelation') {
+          json = {
+            ...json,
+            [dat[1]]: {
+              __op: 'RemoveRelation',
+              objects: []
+            }
+          };
+
+          dat[2].forEach(objectId => {
+            json[dat[1]].objects.push({
+              __type: 'Pointer',
+              objectId,
+              className: dat[3]
+            });
+          });
         }
       } else if (dat[0] === 'string') {
         json = {
@@ -79,52 +111,19 @@ const Index = (data, masterKey = false) => {
           ...json,
           [dat[1]]: dat[2]
         };
-      } else if (dat[0] === 'image') {
-        const upload = await ParseFile(dat[2], {
+      } else if (dat[0] === 'file') {
+        await ParseFile.upload(dat[2], {
           masterKey
-        });
-        if (upload.status) {
+        }).then(response => {
           const filer = {
             __type: 'File',
-            url: upload.output.url,
-            name: upload.output.name
+            url: response.output.url,
+            name: response.output.name
           };
           json = {
             ...json,
             [dat[1]]: filer
           };
-        }
-      } else if (dat[0] === 'addRelation') {
-        json = {
-          ...json,
-          [dat[1]]: {
-            __op: 'AddRelation',
-            objects: []
-          }
-        };
-
-        dat[2].forEach(objectId => {
-          json[dat[1]].objects.push({
-            __type: 'Pointer',
-            objectId,
-            className: '_User'
-          });
-        });
-      } else if (dat[0] === 'removeRelation') {
-        json = {
-          ...json,
-          [dat[1]]: {
-            __op: 'RemoveRelation',
-            objects: []
-          }
-        };
-
-        dat[2].forEach(objectId => {
-          json[dat[1]].objects.push({
-            __type: 'Pointer',
-            objectId,
-            className: '_User'
-          });
         });
       } else if (dat[0] === 'acl') {
         json = {

@@ -5,12 +5,12 @@ const Index = where => {
       if (key === 'equalTo') {
         conditional = {
           ...conditional,
-          [wh.object]: wh.equalTo
+          [wh.column]: wh.equalTo
         };
       } else if (key === 'equalToPointer') {
         conditional = {
           ...conditional,
-          [wh.object]: {
+          [wh.column]: {
             __type: 'Pointer',
             objectId: wh.objectId,
             className: wh.className
@@ -19,14 +19,14 @@ const Index = where => {
       } else if (key === 'notEqualTo') {
         conditional = {
           ...conditional,
-          [wh.object]: {
+          [wh.column]: {
             $ne: wh.notEqualTo
           }
         };
       } else if (key === 'notEqualToPointer') {
         conditional = {
           ...conditional,
-          [wh.object]: {
+          [wh.column]: {
             $ne: {
               __type: 'Pointer',
               objectId: wh.objectId,
@@ -37,58 +37,58 @@ const Index = where => {
       } else if (key === 'containedIn') {
         conditional = {
           ...conditional,
-          [wh.object]: {
+          [wh.column]: {
             $in: wh.containedIn // in array
           }
         };
       } else if (key === 'notContainedIn') {
         conditional = {
           ...conditional,
-          [wh.object]: {
+          [wh.column]: {
             $nin: wh.notContainedIn // in array
           }
         };
       } else if (key === 'greaterThan') {
         let i = 0;
         Object.keys(conditional).forEach(con => {
-          if (con === wh.object) {
+          if (con === wh.column) {
             i += 1;
           }
         });
 
         if (i) {
-          conditional[wh.object] = {
-            ...conditional[wh.object],
+          conditional[wh.column] = {
+            ...conditional[wh.column],
             $gt: wh.greaterThan
           };
 
           if (wh.lessThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lt: wh.lessThan
             };
           } else if (wh.lessThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lte: wh.lessThanOrEqualTo
             };
           }
         } else {
           conditional = {
             ...conditional,
-            [wh.object]: {
+            [wh.column]: {
               $gt: wh.greaterThan
             }
           };
 
           if (wh.lessThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lt: wh.lessThan
             };
           } else if (wh.lessThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lte: wh.lessThanOrEqualTo
             };
           }
@@ -96,44 +96,44 @@ const Index = where => {
       } else if (key === 'greaterThanOrEqualTo') {
         let i = 0;
         Object.keys(conditional).forEach(con => {
-          if (con === wh.object) {
+          if (con === wh.column) {
             i += 1;
           }
         });
 
         if (i) {
-          conditional[wh.object] = {
-            ...conditional[wh.object],
+          conditional[wh.column] = {
+            ...conditional[wh.column],
             $gte: wh.greaterThanOrEqualTo
           };
 
           if (wh.lessThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lt: wh.lessThan
             };
           } else if (wh.lessThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lte: wh.lessThanOrEqualTo
             };
           }
         } else {
           conditional = {
             ...conditional,
-            [wh.object]: {
+            [wh.column]: {
               $gte: wh.greaterThanOrEqualTo
             }
           };
 
           if (wh.lessThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lt: wh.lessThan
             };
           } else if (wh.lessThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $lte: wh.lessThanOrEqualTo
             };
           }
@@ -141,44 +141,44 @@ const Index = where => {
       } else if (key === 'lessThan') {
         let i = 0;
         Object.keys(conditional).forEach(con => {
-          if (con === wh.object) {
+          if (con === wh.column) {
             i += 1;
           }
         });
 
         if (i) {
-          conditional[wh.object] = {
-            ...conditional[wh.object],
+          conditional[wh.column] = {
+            ...conditional[wh.column],
             $lt: wh.lessThan
           };
 
           if (wh.greaterThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gt: wh.greaterThan
             };
           } else if (wh.greaterThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gte: wh.greaterThanOrEqualTo
             };
           }
         } else {
           conditional = {
             ...conditional,
-            [wh.object]: {
+            [wh.column]: {
               $lt: wh.lessThan
             }
           };
 
           if (wh.greaterThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gt: wh.greaterThan
             };
           } else if (wh.greaterThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gte: wh.greaterThanOrEqualTo
             };
           }
@@ -186,44 +186,44 @@ const Index = where => {
       } else if (key === 'lessThanOrEqualTo') {
         let i = 0;
         Object.keys(conditional).forEach(con => {
-          if (con === wh.object) {
+          if (con === wh.column) {
             i += 1;
           }
         });
 
         if (i) {
-          conditional[wh.object] = {
-            ...conditional[wh.object],
+          conditional[wh.column] = {
+            ...conditional[wh.column],
             $lte: wh.lessThanOrEqualTo
           };
 
           if (wh.greaterThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gt: wh.greaterThan
             };
           } else if (wh.greaterThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gte: wh.greaterThanOrEqualTo
             };
           }
         } else {
           conditional = {
             ...conditional,
-            [wh.object]: {
+            [wh.column]: {
               $lte: wh.lessThanOrEqualTo
             }
           };
 
           if (wh.greaterThan) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gt: wh.greaterThan
             };
           } else if (wh.greaterThanOrEqualTo) {
-            conditional[wh.object] = {
-              ...conditional[wh.object],
+            conditional[wh.column] = {
+              ...conditional[wh.column],
               $gte: wh.greaterThanOrEqualTo
             };
           }

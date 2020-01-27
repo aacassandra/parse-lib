@@ -1,4 +1,3 @@
-import { ParseLQ } from '@aacassandra/parse-live-query';
 import Config from './functions/config';
 import Objects from './functions/objects';
 import Session from './functions/session';
@@ -7,68 +6,104 @@ import Queries from './functions/queries';
 import Roles from './functions/roles';
 import File from './functions/files';
 import Cloud from './functions/cloud';
+import LiveQuery from './functions/liveQuery';
 
 const ParseConfig = Config;
 
-const ParseRetrieve = Objects.retrieve;
-const ParseRetrieves = Objects.retrieves;
-const ParseSave = Objects.save;
-const ParseUpdate = Objects.update;
-const ParseDelete = Objects.delete;
+// Object
+const ParseCreateObject = Objects.creatingObject;
+const ParseRetrieveObject = Objects.retrieveObject;
+const ParseUpdateObject = Objects.updateObject;
+const ParseDeleteObject = Objects.deleteObject;
 const ParseBatch = Objects.batch;
-const ParseFile = File;
-const ParseCloud = Cloud;
 
+// Queries
+const ParseRetrieveObjects = Queries.basic;
+const ParseRetrieveRelation = Queries.retrievesRelation;
+const ParseCountingObjects = Queries.countingObjects;
+
+// Users
 const ParseSignIn = Users.signIn;
 const ParseSignUp = Users.signUp;
 const ParseSignOut = Users.signOut;
+// const ParseVerifyingEmail = Users.verivy;
+// const ParseResettingPassword = Users.resetPassword;
 const ParseValidateSession = Users.validateSession;
 const ParseUpdateUser = Users.updateUser;
 const ParseRetrieveUser = Users.retrieveUser;
-const ParseRetrievesUser = Users.retrievesUser;
+const ParseRetrieveUsers = Users.retrieveUsers;
+// const ParseDeleteUsers = Users.deleteUser;
 
+// Sessions
+// const ParseCreateSession = Session.createSession;
 const ParseRetrieveSession = Session.retrieveSession;
 const ParseRetrievesSession = Session.retrievesSession;
 const ParseUpdateSession = Session.updateSession;
 const ParseDeleteSession = Session.deleteSession;
 
-const ParseQueriesBasic = Queries.basic;
-const ParseRetrieveRelation = Queries.retrievesRelation;
-const ParseCountingObjects = Queries.countingObjects;
+// Roles
 const ParseCreateRole = Roles.createRole;
 const ParseRetrieveRole = Roles.retrieveRole;
 const ParseUpdateRole = Roles.updateRole;
 const ParseDeleteRole = Roles.deleteRole;
 
-const ParseWebSocket = ParseLQ;
+// Files
+const ParseUploadFile = File.upload;
+const ParseDeleteFile = File.delete;
+
+// Cloud Code
+const ParseCloud = Cloud;
+
+// Live Query
+const ParseLiveQuery = LiveQuery;
 
 export {
-  ParseCloud,
-  ParseFile,
   ParseConfig,
-  ParseRetrieve,
-  ParseRetrieves,
-  ParseSave,
-  ParseUpdate,
-  ParseDelete,
+  //--------------------------
+  // ---Object
+  ParseCreateObject,
+  ParseRetrieveObject,
+  ParseUpdateObject,
+  ParseDeleteObject,
   ParseBatch,
+  //--------------------------
+  // ---Queries
+  ParseRetrieveObjects,
+  ParseRetrieveRelation,
+  ParseCountingObjects,
+  //--------------------------
+  // ---Users
   ParseSignIn,
   ParseSignUp,
   ParseSignOut,
+  // ParseVerifyingEmail,
+  // ParseResettingPassword,
   ParseValidateSession,
   ParseUpdateUser,
   ParseRetrieveUser,
-  ParseRetrievesUser,
+  ParseRetrieveUsers,
+  // ParseDeleteUsers,
+  //--------------------------
+  // ---Session
+  // ParseCreateSession,
   ParseRetrieveSession,
-  ParseRetrievesSession,
   ParseUpdateSession,
   ParseDeleteSession,
-  ParseQueriesBasic,
-  ParseRetrieveRelation,
-  ParseCountingObjects,
+  ParseRetrievesSession,
+  //--------------------------
+  // ---Roles
   ParseCreateRole,
   ParseRetrieveRole,
   ParseUpdateRole,
   ParseDeleteRole,
-  ParseWebSocket
+  //--------------------------
+  // ---Files
+  ParseUploadFile,
+  ParseDeleteFile,
+  //--------------------------
+  // ---Cloud COde
+  ParseCloud,
+  //--------------------------
+  // ---Live Query
+  ParseLiveQuery
 };

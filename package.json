@@ -1,6 +1,6 @@
 {
   "name": "@aacassandra/parse-lib",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Parse libraries",
   "main": "src/index.js",
   "publishConfig": {
@@ -25,7 +25,7 @@
   "homepage": "https://github.com/aacassandra/parse-lib#readme",
   "dependencies": {
     "@aacassandra/parse-config": "^1.0.3",
-    "@aacassandra/parse-live-query": "^1.0.0",
+    "@aacassandra/parse-live-query": "^1.0.1",
     "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {

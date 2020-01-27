@@ -1,4 +1,3 @@
-/* eslint-disable no-async-promise-executor */
 import ParseData from '@aacassandra/parse-config';
 import { ParseDependency, ParseHandleError } from '../../helper';
 import Initialize from '../initialize';
@@ -7,11 +6,11 @@ import Tools from '../../tools';
 const { XMLHttpRequest } = require('xmlhttprequest');
 
 const CloudCode = (data = {}) => {
-  return new Promise(async res => {
+  return new Promise((res, rej) => {
     const Config = ParseData.config;
     let response = ParseDependency([data]);
     if (!response.status) {
-      res(response);
+      rej(response);
     } else {
       // Binary is blob file, from base64(data uri) to blob
       const xhr = new XMLHttpRequest();
@@ -31,7 +30,7 @@ const CloudCode = (data = {}) => {
       xhr.onload = async () => {
         response = ParseHandleError(xhr);
         if (!response.status) {
-          res(response);
+          rej(response);
         }
 
         const output = JSON.parse(xhr.responseText);
@@ -49,10 +48,12 @@ const CloudCode = (data = {}) => {
       };
 
       xhr.onerror = () => {
-        res({
+        const errorResponse = {
           xhr,
           status: false
-        });
+        };
+
+        rej(errorResponse);
       };
 
       xhr.send(JSON.stringify(data));
@@ -84,51 +85,117 @@ export default {
     });
 
     await Promise.all(promises);
-    const cloud = await CloudCode({
-      objectId,
-      data: newData,
-      options,
-      functionName: 'ParseUpdateUser'
+    return new Promise((res, rej) => {
+      const run = async () => {
+        await CloudCode({
+          objectId,
+          data: newData,
+          options,
+          functionName: 'ParseUpdateUser'
+        })
+          .then(onResponse => {
+            res(onResponse);
+          })
+          .catch(onError => {
+            rej(onError);
+          });
+      };
+
+      run();
     });
-    return cloud;
   },
-  Update: async (
+  Update: (
     className = '',
     objectId = '',
     data = [],
     options = { include: [], masterKey: false }
   ) => {
-    const cloud = await CloudCode({
-      className,
-      objectId,
-      data,
-      options,
-      functionName: 'ParseUpdate'
+    return new Promise((res, rej) => {
+      const run = async () => {
+        await CloudCode({
+          className,
+          objectId,
+          data,
+          options,
+          functionName: 'ParseUpdate'
+        })
+          .then(onResponse => {
+            res(onResponse);
+          })
+          .catch(onError => {
+            rej(onError);
+          });
+      };
+
+      run();
     });
-    return cloud;
   },
-  Retrieve: async (
+  Retrieve: (
     className = '',
     objectId = '',
-    options = { where: [], include: [], relation: [], masterKey: false }
+    options = {
+      where: [],
+      include: [],
+      relation: [],
+      masterKey: false
+    }
   ) => {
-    const cloud = await CloudCode({
-      className,
-      objectId,
-      options,
-      functionName: 'ParseRetrieve'
+    return new Promise((res, rej) => {
+      const run = async () => {
+        await CloudCode({
+          className,
+          objectId,
+          options,
+          functionName: 'ParseRetrieve'
+        })
+          .then(onResponse => {
+            res(onResponse);
+          })
+          .catch(onError => {
+            rej(onError);
+          });
+      };
+
+      run();
     });
-    return cloud;
   },
-  Retrieves: async (
+  Retrieves: (
     className = '',
-    options = { where: [], include: [], relation: [], masterKey: false }
+    options = {
+      where: [],
+      include: [],
+      relation: [],
+      masterKey: false
+    }
   ) => {
-    const cloud = await CloudCode({
-      className,
-      options,
-      functionName: 'ParseRetrieves'
+    return new Promise((res, rej) => {
+      const run = async () => {
+        await CloudCode({
+          className,
+          options,
+          functionName: 'ParseRetrieves'
+        })
+          .then(onResponse => {
+            if (!onResponse.output.length) {
+              const newError = {
+                output: {
+                  code: 101,
+                  message: 'No data available'
+                },
+                status: false
+              };
+
+              rej(newError);
+            } else {
+              res(onResponse);
+            }
+          })
+          .catch(onError => {
+            rej(onError);
+          });
+      };
+
+      run();
     });
-    return cloud;
   }
 };

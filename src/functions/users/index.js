@@ -6,91 +6,22 @@ import Objects from '../objects';
 const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
-  validateSession(sessionToken = '') {
-    return new Promise(res => {
-      const Config = ParseData.config;
-      let response = ParseDependency([sessionToken]);
-      if (!response.status) {
-        res(response);
-      } else {
-        let url = Initialize();
-        url = `${url}/users/me`;
-        url = encodeURI(url);
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', url, true);
-        xhr.setRequestHeader(Config.headerAppId, Config.appId);
-        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-        xhr.setRequestHeader(Config.headerSessionToken, sessionToken);
-
-        xhr.onload = async () => {
-          response = ParseHandleError(xhr);
-          if (!response.status) {
-            res(response);
-          }
-
-          const output = JSON.parse(xhr.responseText);
-          res({
-            output,
-            status: true
-          });
-        };
-
-        xhr.onerror = () => {
-          response = ParseHandleError(xhr);
-          res(response);
-        };
-
-        xhr.send(null);
-      }
-    });
-  },
-  signOut(sessionToken = '') {
-    return new Promise(res => {
-      const Config = ParseData.config;
-      let response = ParseDependency([sessionToken]);
-      if (!response.status) {
-        res(response);
-      } else {
-        let url = Initialize();
-        url = `${url}/logout`;
-        url = encodeURI(url);
-
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', url, true);
-        xhr.setRequestHeader(Config.headerAppId, Config.appId);
-        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
-        xhr.setRequestHeader(Config.headerSessionToken, sessionToken);
-
-        xhr.onload = async () => {
-          response = ParseHandleError(xhr);
-          if (!response.status) {
-            res(response);
-          }
-
-          const output = JSON.parse(xhr.responseText);
-          res({
-            output,
-            status: true
-          });
-        };
-
-        xhr.onerror = () => {
-          response = ParseHandleError(xhr);
-          res(response);
-        };
-
-        xhr.send(null);
-      }
-    });
-  },
-  signUp(userName = '', passWord = '', data = [], options = { masterKey: false }) {
+  signUp(
+    userName = '',
+    passWord = '',
+    data = [],
+    options = {
+      include: [],
+      relation: [],
+      masterKey: false
+    }
+  ) {
     // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async res => {
+    return new Promise(async (res, rej) => {
       const Config = ParseData.config;
       let response = ParseDependency([userName, passWord]);
       if (!response.status) {
-        res(response);
+        rej(response);
       } else {
         let url = Initialize();
         url = `${url}/users`;
@@ -128,28 +59,31 @@ const Index = {
         xhr.onload = async () => {
           response = ParseHandleError(xhr);
           if (!response.status) {
-            res(response);
+            rej(response);
           }
 
           const output = JSON.parse(xhr.responseText);
-          const getResponse = await Objects.retrieve('_User', output.objectId, options);
-          if (getResponse.status) {
-            getResponse.output = {
-              ...getResponse.output,
-              sessionToken: output.sessionToken
-            };
-            res(getResponse);
-          } else {
-            res({
-              output,
-              status: true
+          let newOnResponse;
+          await Objects.retrieveObject('_User', output.objectId, options)
+            .then(onResponse => {
+              newOnResponse = onResponse;
+              newOnResponse.output = {
+                ...newOnResponse.output,
+                sessionToken: output.sessionToken
+              };
+              res(newOnResponse);
+            })
+            .catch(() => {
+              res({
+                output,
+                status: true
+              });
             });
-          }
         };
 
         xhr.onerror = () => {
           response = ParseHandleError(xhr);
-          res(response);
+          rej(response);
         };
 
         xhr.send(json);
@@ -157,11 +91,11 @@ const Index = {
     });
   },
   signIn(userName = '', passWord = '') {
-    return new Promise(res => {
+    return new Promise((res, rej) => {
       const Config = ParseData.config;
       let response = ParseDependency([userName, passWord]);
       if (!response.status) {
-        res(response);
+        rej(response);
       } else {
         let url = Initialize();
         url = `${url}/login?username=${userName}&password=${passWord}`;
@@ -176,7 +110,7 @@ const Index = {
         xhr.onload = async () => {
           response = ParseHandleError(xhr);
           if (!response.status) {
-            res(response);
+            rej(response);
           }
 
           const output = JSON.parse(xhr.responseText);
@@ -188,7 +122,91 @@ const Index = {
 
         xhr.onerror = () => {
           response = ParseHandleError(xhr);
-          res(response);
+          rej(response);
+        };
+
+        xhr.send(null);
+      }
+    });
+  },
+  signOut(sessionToken = '') {
+    return new Promise((res, rej) => {
+      const Config = ParseData.config;
+      let response = ParseDependency([sessionToken]);
+      if (!response.status) {
+        rej(response);
+      } else {
+        let url = Initialize();
+        url = `${url}/logout`;
+        url = encodeURI(url);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        xhr.setRequestHeader(Config.headerSessionToken, sessionToken);
+
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            rej(response);
+          }
+
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output,
+            status: true
+          });
+        };
+
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          rej(response);
+        };
+
+        xhr.send(null);
+      }
+    });
+  },
+  verivy: () => {
+    //
+  },
+  resetPassword: () => {
+    //
+  },
+  validateSession: (sessionToken = '') => {
+    return new Promise((res, rej) => {
+      const Config = ParseData.config;
+      let response = ParseDependency([sessionToken]);
+      if (!response.status) {
+        rej(response);
+      } else {
+        let url = Initialize();
+        url = `${url}/users/me`;
+        url = encodeURI(url);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        xhr.setRequestHeader(Config.headerSessionToken, sessionToken);
+
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            rej(response);
+          }
+
+          const output = JSON.parse(xhr.responseText);
+          res({
+            output,
+            status: true
+          });
+        };
+
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          rej(response);
         };
 
         xhr.send(null);
@@ -201,11 +219,11 @@ const Index = {
     options = { include: [], masterKey: false, sessionToken: '' }
   ) {
     // eslint-disable-next-line no-async-promise-executor
-    return new Promise(async res => {
+    return new Promise(async (res, rej) => {
       const Config = ParseData.config;
       let response = ParseDependency([objectId, data]);
       if (!response.status) {
-        res(response);
+        rej(response);
       } else {
         let url = Initialize();
         url = `${url}/users/${objectId}`;
@@ -229,7 +247,7 @@ const Index = {
         xhr.onload = async () => {
           response = ParseHandleError(xhr);
           if (!response.status) {
-            res(response);
+            rej(response);
           }
 
           const output = JSON.parse(xhr.responseText);
@@ -241,7 +259,7 @@ const Index = {
 
         xhr.onerror = () => {
           response = ParseHandleError(xhr);
-          res(response);
+          rej(response);
         };
 
         xhr.send(json);
@@ -249,11 +267,11 @@ const Index = {
     });
   },
   retrieveUser(objectId = '', options = { masterKey: false }) {
-    return new Promise(res => {
+    return new Promise((res, rej) => {
       const Config = ParseData.config;
       let response = ParseDependency([objectId]);
       if (!response.status) {
-        res(response);
+        rej(response);
       } else {
         let url = Initialize();
         url = `${url}/users/${objectId}`;
@@ -270,7 +288,7 @@ const Index = {
         xhr.onload = async () => {
           response = ParseHandleError(xhr);
           if (!response.status) {
-            res(response);
+            rej(response);
           }
 
           const output = JSON.parse(xhr.responseText);
@@ -282,15 +300,15 @@ const Index = {
 
         xhr.onerror = () => {
           response = ParseHandleError(xhr);
-          res(response);
+          rej(response);
         };
 
         xhr.send(null);
       }
     });
   },
-  retrievesUser(options = { masterKey: false }) {
-    return new Promise(res => {
+  retrieveUsers(options = { masterKey: false }) {
+    return new Promise((res, rej) => {
       const Config = ParseData.config;
       let response;
       let url = Initialize();
@@ -308,7 +326,7 @@ const Index = {
       xhr.onload = async () => {
         response = ParseHandleError(xhr);
         if (!response.status) {
-          res(response);
+          rej(response);
         }
 
         const output = JSON.parse(xhr.responseText);
@@ -320,11 +338,14 @@ const Index = {
 
       xhr.onerror = () => {
         response = ParseHandleError(xhr);
-        res(response);
+        rej(response);
       };
 
       xhr.send(null);
     });
+  },
+  deleteUser: () => {
+    //
   }
 };
 
