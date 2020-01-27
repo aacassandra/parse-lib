@@ -1,6 +1,6 @@
 {
   "name": "@aacassandra/parse-lib",
-  "version": "1.0.9",
+  "version": "1.1.0",
   "description": "Parse libraries",
   "main": "src/index.js",
   "publishConfig": {
@@ -11,12 +11,15 @@
     "url": "git+https://github.com/aacassandra/parse-lib.git"
   },
   "keywords": [
-    "npm"
+    "Parse SDK Minimalist",
+    "Parse Rest API",
+    "Parse JS Modern",
+    "Parse Client"
   ],
   "author": {
     "name": "Alauddin Afif Cassandra",
     "email": "alauddinafifcassandra@programmer.net",
-    "url": "https://aacassandra.github.io"
+    "url": "https://aacassandra-github.web.app"
   },
   "license": "MIT",
   "bugs": {
