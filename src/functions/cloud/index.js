@@ -23,9 +23,6 @@ const CloudCode = (data = {}) => {
       xhr.setRequestHeader(Config.headerAppId, Config.appId);
       xhr.setRequestHeader(Config.headerResKey, Config.resKey);
       xhr.setRequestHeader('Content-Type', 'application/json');
-      if (data.options.masterKey) {
-        xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
-      }
 
       xhr.onload = async () => {
         response = ParseHandleError(xhr);
@@ -62,16 +59,20 @@ const CloudCode = (data = {}) => {
 };
 
 export default {
-  UpdateUser: async (objectId = '', data = [], options = { include: [], masterKey: false }) => {
+  UpdateUser: async (
+    objectId = '',
+    data = [],
+    options = { include: [], relation: [], masterKey: false }
+  ) => {
     const newData = [];
     const promises = data.map(async dat => {
-      if (dat[0] === 'image') {
+      if (dat[0] === 'file') {
         const file = await Tools.get.file.property(dat[2]);
         if (file.status) {
           const { nameImg } = file.output;
           const { base64Img } = file.output;
           newData.push([
-            'image',
+            'file',
             dat[1],
             {
               fileName: nameImg,
@@ -104,11 +105,48 @@ export default {
       run();
     });
   },
-  Update: (
+  DeleteUser: (objectId = '') => {
+    return new Promise((res, rej) => {
+      const run = async () => {
+        await CloudCode({
+          objectId,
+          functionName: 'ParseDeleteUser'
+        })
+          .then(onResponse => {
+            res(onResponse);
+          })
+          .catch(onError => {
+            rej(onError);
+          });
+      };
+
+      run();
+    });
+  },
+  DeleteObject: (className = '', objectId = '') => {
+    return new Promise((res, rej) => {
+      const run = async () => {
+        await CloudCode({
+          className,
+          objectId,
+          functionName: 'ParseDeleteObject'
+        })
+          .then(onResponse => {
+            res(onResponse);
+          })
+          .catch(onError => {
+            rej(onError);
+          });
+      };
+
+      run();
+    });
+  },
+  UpdateObject: (
     className = '',
     objectId = '',
     data = [],
-    options = { include: [], masterKey: false }
+    options = { include: [], relation: [], masterKey: false }
   ) => {
     return new Promise((res, rej) => {
       const run = async () => {
@@ -130,7 +168,7 @@ export default {
       run();
     });
   },
-  Retrieve: (
+  RetrieveObject: (
     className = '',
     objectId = '',
     options = {
@@ -159,7 +197,7 @@ export default {
       run();
     });
   },
-  Retrieves: (
+  RetrieveObjects: (
     className = '',
     options = {
       where: [],

@@ -144,12 +144,21 @@ const Index = {
             const promises = options.relation.map(async rel => {
               let onClassName = '';
               let columnName;
-              let relInclude;
+              // eslint-disable-next-line prefer-const
+              let relInclude = [];
               let relSplit;
               if (rel.indexOf('|') >= 1) {
                 relSplit = rel.split('|');
                 columnName = relSplit[0];
-                relInclude = JSON.parse(relSplit[1]);
+                let incSplitter;
+                if (relSplit[1].indexOf(',')) {
+                  incSplitter = relSplit[1].split(',');
+                  incSplitter.forEach(inc => {
+                    relInclude.push(inc);
+                  });
+                } else {
+                  relInclude.push(relSplit[1]);
+                }
               } else {
                 columnName = rel;
               }

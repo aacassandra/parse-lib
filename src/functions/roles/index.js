@@ -214,7 +214,7 @@ const Index = {
                 }
 
                 res({
-                  output: 'Role has been removed',
+                  output: 'deleted',
                   status: true
                 });
               };

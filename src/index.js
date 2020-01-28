@@ -32,7 +32,7 @@ const ParseValidateSession = Users.validateSession;
 const ParseUpdateUser = Users.updateUser;
 const ParseRetrieveUser = Users.retrieveUser;
 const ParseRetrieveUsers = Users.retrieveUsers;
-// const ParseDeleteUsers = Users.deleteUser;
+const ParseDeleteUser = Users.deleteUser;
 
 // Sessions
 // const ParseCreateSession = Session.createSession;
@@ -82,7 +82,7 @@ export {
   ParseUpdateUser,
   ParseRetrieveUser,
   ParseRetrieveUsers,
-  // ParseDeleteUsers,
+  ParseDeleteUser,
   //--------------------------
   // ---Session
   // ParseCreateSession,

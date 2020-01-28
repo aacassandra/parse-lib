@@ -344,8 +344,55 @@ const Index = {
       xhr.send(null);
     });
   },
-  deleteUser: () => {
-    //
+  deleteUser: (
+    objectId = '',
+    options = {
+      sessionToken: '',
+      masterKey: false
+    }
+  ) => {
+    // eslint-disable-next-line no-async-promise-executor
+    return new Promise(async (res, rej) => {
+      const Config = ParseData.config;
+      let response = ParseDependency([objectId]);
+      if (!response.status) {
+        rej(response);
+      } else {
+        let url = Initialize();
+        url = `${url}/users/${objectId}`;
+
+        url = encodeURI(url);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('DELETE', url, true);
+        xhr.setRequestHeader(Config.headerAppId, Config.appId);
+        xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+        if (options.masterKey) {
+          xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+        } else {
+          xhr.setRequestHeader(Config.headerSessionToken, options.sessionToken);
+        }
+
+        xhr.onload = async () => {
+          response = ParseHandleError(xhr);
+          if (!response.status) {
+            rej(response);
+          }
+
+          res({
+            output: 'deleted',
+            status: true
+          });
+        };
+
+        xhr.onerror = () => {
+          response = ParseHandleError(xhr);
+          rej(response);
+        };
+
+        xhr.send(null);
+      }
+    });
   }
 };
 
