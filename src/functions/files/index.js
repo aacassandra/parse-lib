@@ -5,7 +5,7 @@ import { ParseDependency, ParseHandleError } from '../../helper';
 
 import Initialize from '../initialize';
 
-const { XMLHttpRequest } = require('xmlhttprequest');
+//const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
   upload: (

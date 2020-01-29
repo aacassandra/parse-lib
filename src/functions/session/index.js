@@ -2,7 +2,7 @@ import ParseData from '@aacassandra/parse-config';
 import { ParseDependency, ParseHandleError, ParseObjectSet } from '../../helper';
 import Initialize from '../initialize';
 
-const { XMLHttpRequest } = require('xmlhttprequest');
+//const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
   createSession: () => {

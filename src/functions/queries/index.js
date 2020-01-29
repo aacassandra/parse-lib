@@ -3,7 +3,7 @@ import ParseData from '@aacassandra/parse-config';
 import { ParseDependency, ParseHandleError, ParseConditional } from '../../helper';
 import Initialize from '../initialize';
 
-const { XMLHttpRequest } = require('xmlhttprequest');
+//const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
   basic: (

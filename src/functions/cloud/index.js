@@ -3,7 +3,7 @@ import { ParseDependency, ParseHandleError } from '../../helper';
 import Initialize from '../initialize';
 import Tools from '../../tools';
 
-const { XMLHttpRequest } = require('xmlhttprequest');
+//const { XMLHttpRequest } = require('xmlhttprequest');
 
 const CloudCode = (data = {}) => {
   return new Promise((res, rej) => {

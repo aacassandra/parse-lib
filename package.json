@@ -1,6 +1,6 @@
 {
   "name": "@aacassandra/parse-lib",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Parse libraries",
   "main": "src/index.js",
   "publishConfig": {

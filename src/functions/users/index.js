@@ -3,7 +3,7 @@ import { ParseDependency, ParseHandleError, ParseObjectSet } from '../../helper'
 import Initialize from '../initialize';
 import Objects from '../objects';
 
-const { XMLHttpRequest } = require('xmlhttprequest');
+//const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
   signUp(

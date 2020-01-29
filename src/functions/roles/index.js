@@ -4,7 +4,7 @@ import Initialize from '../initialize';
 import Objects from '../objects';
 import Queries from '../queries';
 
-const { XMLHttpRequest } = require('xmlhttprequest');
+//const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
   createRole: (

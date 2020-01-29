@@ -10,7 +10,7 @@ import {
 import Initialize from '../initialize';
 import Queries from '../queries';
 
-const { XMLHttpRequest } = require('xmlhttprequest');
+//const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
   creatingObject(
