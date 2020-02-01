@@ -38,12 +38,12 @@ const Helper = {
           },
           status: false
         };
-      } else if (xhr.responseText === 'The Internet connection appears to be offline.') {
+      } else if (typeof xhr.responseText === 'string' && xhr.status === 0) {
         // for handling if device has lost connection from react native project
         response = {
           output: {
             code: 0,
-            message: xhr.responseText
+            message: 'The Internet connection appears to be offline.'
           },
           status: false
         };
