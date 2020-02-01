@@ -26,8 +26,8 @@ const ParseCountingObjects = Queries.countingObjects;
 const ParseSignIn = Users.signIn;
 const ParseSignUp = Users.signUp;
 const ParseSignOut = Users.signOut;
-// const ParseVerifyingEmail = Users.verivy;
-// const ParseResettingPassword = Users.resetPassword;
+const ParseVerifyingEmail = Users.verivy;
+const ParseResettingPassword = Users.resetPassword;
 const ParseValidateSession = Users.validateSession;
 const ParseUpdateUser = Users.updateUser;
 const ParseRetrieveUser = Users.retrieveUser;
@@ -76,8 +76,8 @@ export {
   ParseSignIn,
   ParseSignUp,
   ParseSignOut,
-  // ParseVerifyingEmail,
-  // ParseResettingPassword,
+  ParseVerifyingEmail,
+  ParseResettingPassword,
   ParseValidateSession,
   ParseUpdateUser,
   ParseRetrieveUser,

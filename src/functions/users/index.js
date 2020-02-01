@@ -3,7 +3,7 @@ import { ParseDependency, ParseHandleError, ParseObjectSet } from '../../helper'
 import Initialize from '../initialize';
 import Objects from '../objects';
 
-//const { XMLHttpRequest } = require('xmlhttprequest');
+// const { XMLHttpRequest } = require('xmlhttprequest');
 
 const Index = {
   signUp(
@@ -168,11 +168,113 @@ const Index = {
       }
     });
   },
-  verivy: () => {
-    //
+  verivy: (
+    email = '',
+    options = {
+      masterKey: false
+    }
+  ) => {
+    return new Promise((res, rej) => {
+      const Config = ParseData.config;
+      let response = ParseDependency([email]);
+      if (!response.status) {
+        rej(response);
+      } else {
+        const run = async () => {
+          let url = Initialize();
+          url = `${url}/verificationEmailRequest`;
+
+          let json = { email };
+          json = JSON.stringify(json);
+
+          url = encodeURI(url);
+
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', url, true);
+          xhr.setRequestHeader(Config.headerAppId, Config.appId);
+          xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          if (options.masterKey) {
+            xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+          }
+
+          xhr.onload = async () => {
+            response = ParseHandleError(xhr);
+            if (!response.status) {
+              rej(response);
+            }
+
+            res({
+              status: true,
+              output: 'sended'
+            });
+          };
+
+          xhr.onerror = () => {
+            response = ParseHandleError(xhr);
+            rej(response);
+          };
+
+          xhr.send(json);
+        };
+
+        run();
+      }
+    });
   },
-  resetPassword: () => {
-    //
+  resetPassword: (
+    email = '',
+    options = {
+      masterKey: false
+    }
+  ) => {
+    return new Promise((res, rej) => {
+      const Config = ParseData.config;
+      let response = ParseDependency([email]);
+      if (!response.status) {
+        rej(response);
+      } else {
+        const run = async () => {
+          let url = Initialize();
+          url = `${url}/requestPasswordReset`;
+
+          let json = { email };
+          json = JSON.stringify(json);
+
+          url = encodeURI(url);
+
+          const xhr = new XMLHttpRequest();
+          xhr.open('POST', url, true);
+          xhr.setRequestHeader(Config.headerAppId, Config.appId);
+          xhr.setRequestHeader(Config.headerResKey, Config.resKey);
+          xhr.setRequestHeader('Content-Type', 'application/json');
+          if (options.masterKey) {
+            xhr.setRequestHeader(Config.headerMasterKey, Config.masterKey);
+          }
+
+          xhr.onload = async () => {
+            response = ParseHandleError(xhr);
+            if (!response.status) {
+              rej(response);
+            }
+
+            res({
+              status: true,
+              output: 'sended'
+            });
+          };
+
+          xhr.onerror = () => {
+            response = ParseHandleError(xhr);
+            rej(response);
+          };
+
+          xhr.send(json);
+        };
+
+        run();
+      }
+    });
   },
   validateSession: (sessionToken = '') => {
     return new Promise((res, rej) => {
