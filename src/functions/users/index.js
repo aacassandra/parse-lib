@@ -90,7 +90,7 @@ const Index = {
       }
     });
   },
-  signIn(userName = '', passWord = '') {
+  signIn(userName = '', passWord = '', verifiedEmail = false) {
     return new Promise((res, rej) => {
       const Config = ParseData.config;
       let response = ParseDependency([userName, passWord]);
@@ -114,10 +114,37 @@ const Index = {
           }
 
           const output = JSON.parse(xhr.responseText);
-          res({
-            output,
-            status: true
-          });
+
+          if (verifiedEmail) {
+            const options = {
+              where: [
+                {
+                  column: 'emailVerified',
+                  equalTo: true
+                }
+              ]
+            };
+
+            await Objects.retrieveObject('_User', output.objectId, options)
+              .then(() => {
+                res({
+                  output,
+                  status: true
+                });
+              })
+              .catch(() => {
+                const err = {
+                  output: 'Account not verified!',
+                  status: false
+                };
+                rej(err);
+              });
+          } else {
+            res({
+              output,
+              status: true
+            });
+          }
         };
 
         xhr.onerror = () => {
