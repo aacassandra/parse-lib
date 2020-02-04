@@ -77,12 +77,22 @@ const property = (date = new Date(), utc = false, string = false) => {
   return fixProperty;
 };
 
+// https://stackoverflow.com/questions/1349404/generate-random-string-characters-in-javascript
+const makeid = length => {
+  let result = '';
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength));
+  }
+  return result;
+};
+
 const tools = {
   get: {
     file: {
       property: f => {
         return new Promise(resolve => {
-          let blobURL;
           let fileName;
           let response = {
             status: false,
@@ -94,18 +104,18 @@ const tools = {
               r.onload = e => {
                 const base64Img = e.target.result;
                 const binaryImg = convertDataURIToBinary(base64Img);
-                const blob = new Blob([binaryImg], { type: f.type });
-                blobURL = window.URL.createObjectURL(blob);
-                fileName = f.name;
+                if(!f.name){
+                  let itype = f.type.split('/');
+                  fileName = `${makeid(10)}.${itype[1]}`;
+                }else{
+                  fileName = f.name;
+                }
 
                 const output = {
                   nameImg: fileName,
                   typeImg: f.type,
                   sizeImg: f.size,
-                  base64Url: base64Img,
-                  blobUrl: blobURL,
                   base64Img,
-                  blobImg: blobURL,
                   binaryImg
                 };
 
